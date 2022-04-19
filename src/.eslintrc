@@ -1,0 +1,28 @@
+{
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+            "requireConfigFile": false
+         },
+    "extends": ["prettier"],
+    "rules": {
+      "no-param-reassign": [
+        "error",
+        {
+          "props": true,
+          "ignorePropertyModificationsFor": ["$datepicker", "$pointer"]
+        }
+      ],
+      "func-names": 0,
+      "no-console": 0,
+      "class-methods-use-this": [
+        "error",
+        { "exceptMethods": ["total", "isEmpty", "submit", "handleRichLabel"] }
+      ]
+    },
+    "env": {
+      "browser": true,
+      "commonjs": true,
+      "es6": true,
+      "jquery": true
+    }
+  }
