@@ -1,18 +1,29 @@
-<template>
+<template>  
   <nav class="navigation">
       <ul class="navigation__bar">
-          <li class="navigation__bar-item">First</li>
-          <li class="navigation__bar-item">Second</li>
-          <li class="navigation__bar-item">Third</li>
-          <li class="navigation__bar-item">Fourth</li>
-          <li class="navigation__bar-item">Fifth</li>
+          <li class="navigation__bar-item"><ButtonSimple buttonText="First button" @buttonc="utilityCallback" /></li>
+          <li class="navigation__bar-item"><Dropdown :subjectList="subjects" @buttonc="utilityCallback" /></li>
+          <li class="navigation__bar-item"><Dropdown :subjectList="['5', '5', '4']" title="Math" @buttonc="utilityCallback" /></li>
+          <li class="navigation__bar-item"><Dropdown :subjectList="['Excused leave', 'Pass for no good reason']" @buttonc="utilityCallback" /></li>
       </ul>
   </nav>
 </template>
 
-<script>
-export default {
-};
+<script setup>
+import ButtonSimple from "./UIcomponents/ButtonSimple.vue";
+import Dropdown from "./UIcomponents/Dropdown.vue";
+import { computed } from "vue";
+import { useStore } from 'vuex';
+
+const store = useStore();
+const subjects = computed(() => store.getters.getSubjectsNames(1));
+// console.log(subjects)
+// const subjectNames = subjects
+
+function utilityCallback(event) {
+    console.log("Callback triggered" + event.target);
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -29,7 +40,7 @@ export default {
         justify-content: space-around;
         &__bar-item {
             flex: 1 1 auto;
-
+            cursor: pointer;
         }
     }
 }

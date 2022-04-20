@@ -1,6 +1,39 @@
 import { createApp } from "vue";
 import App from "./pages/App.vue";
-import "./main.scss"
+import { createStore } from "vuex";
+import "./main.scss";
 
 const app = createApp(App);
-app.mount('#app');
+const store = createStore({
+  state: {
+    count: 4,
+    students: [
+      {
+        id: 1,
+        name: "Vasya",
+        subjects: [
+          { name: "Math", estimates: [5, 5, 4] },
+          { name: "Physics", estimates: [3, 5, 4] },
+          { name: "English", estimates: [5, 5, 4] },
+          { name: "Chemistry", estimates: [5, 4, 4] },
+        ],
+        bad_leaves: 2,
+        good_leaves: 4,
+      },
+      { id: 2, name: "Petya" },
+    ],
+  },
+  getters: {
+    getSubjectsNames: (state) => (id) => {
+      const arr = [];
+      state.students
+        .find((student) => student.id === id)
+        .subjects.forEach((element) => {
+          arr.push(element.name);
+        });
+      return arr;
+    },
+  },
+});
+app.use(store);
+app.mount("#app");
