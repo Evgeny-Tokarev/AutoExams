@@ -14,7 +14,7 @@ const store = createStore({
         subjects: [
           { name: "Math", estimates: [5, 5, 4] },
           { name: "Physics", estimates: [3, 5, 4] },
-          { name: "English", estimates: [5, 5, 4] },
+          { name: "English", estimates: [5, 5, 4, 3, 4] },
           { name: "Chemistry", estimates: [5, 4, 4] },
         ],
         bad_leaves: 2,
@@ -32,6 +32,36 @@ const store = createStore({
           arr.push(element.name);
         });
       return arr;
+    },
+    getSubjectEstimates: (state) => (id, subject) => {
+      return state.students
+        .find((student) => student.id === id)
+        .subjects.find((currentSubject) => currentSubject.name === subject)
+        .estimates;
+    },
+    getEstimatesSubject: (state) => (id, subject) => {
+      return (
+        state.students
+          .find((student) => student.id === id)
+          .subjects.find((currentSubject) => currentSubject.name === subject)
+          .name || null
+      );
+    },
+    getLeaves: (state) => (id) => {
+      return [
+        state.students.find((student) => student.id === id).bad_leaves,
+        state.students.find((student) => student.id === id).good_leaves,
+      ];
+    },
+  },
+  mutations: {
+    setEstimate: (state, payload) => {
+      console.log("trigger");
+      state.students
+        .find((student) => student.id === payload.id)
+        .subjects.find(
+          (currentSubject) => currentSubject.name === payload.subject
+        ).estimates[payload.index] = payload.value;
     },
   },
 });

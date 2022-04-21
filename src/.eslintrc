@@ -8,8 +8,7 @@
       "no-param-reassign": [
         "error",
         {
-          "props": true,
-          "ignorePropertyModificationsFor": ["$datepicker", "$pointer"]
+          "props": false
         }
       ],
       "func-names": 0,
