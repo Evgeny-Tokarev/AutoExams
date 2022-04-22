@@ -1,19 +1,26 @@
 <template>
   <button class="simple-button" type="button" @click="clickHandler">
-    {{ buttonText }}
+    {{ buttonText
+    }}<input v-if="true" type="text" @keyup="emitValue" :value="buttonText" />
   </button>
+  {{ buttonText }}
 </template>
 
 <script setup>
 import { reactive, computed } from "vue";
 defineProps({
   buttonText: String,
+  dropInput: Boolean,
 });
 
-const emit = defineEmits("buttonCallback");
-
+const emit = defineEmits(["buttonCallback", "inputChange"]);
 function clickHandler(event) {
   emit("buttonCallback", event);
+}
+
+function emitValue(e) {
+  let value = e.target.value;
+  emit("inputChange", value);
 }
 </script>
 
@@ -32,6 +39,17 @@ function clickHandler(event) {
   &:active {
     box-shadow: inset 0px 0px 5px #0f0f0f;
     outline: none;
+  }
+  & input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 2rem;
+    border: 1px solid green;
+    border-radius: 5px;
+    text-align: center;
   }
 }
 </style>

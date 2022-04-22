@@ -2,6 +2,10 @@ import { createApp } from "vue";
 import App from "./pages/App.vue";
 import { createStore } from "vuex";
 import "./main.scss";
+import { getUserData, writeUserData } from "./firestore.js";
+
+getUserData();
+writeUserData();
 
 const app = createApp(App);
 const store = createStore({
@@ -56,12 +60,16 @@ const store = createStore({
   },
   mutations: {
     setEstimate: (state, payload) => {
-      console.log("trigger");
       state.students
         .find((student) => student.id === payload.id)
         .subjects.find(
           (currentSubject) => currentSubject.name === payload.subject
         ).estimates[payload.index] = payload.value;
+    },
+    setLeave: (state, payload) => {
+      const leave = payload.leaveType === "bad" ? "bad_leaves" : "good_leaves";
+      state.students.find((student) => student.id === payload.id)[leave] =
+        payload.value;
     },
   },
 });

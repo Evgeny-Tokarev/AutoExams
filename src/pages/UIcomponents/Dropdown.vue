@@ -12,9 +12,14 @@
     >
       <span v-if="!!classes">{{ names[index] }} </span>
       <ButtonSimple
+        v-if="buttonType == 'simple'"
+        :buttonText="text"
+        @button-callback="clickHandler($event)"
+      />
+      <ButtonInput
+        v-else
         :dropInput="dropIndex == index"
         :buttonText="text"
-        @button-callback="clickHandler(event)"
         @input-change="updateHandler($event, index)"
       />
     </li>
@@ -24,6 +29,7 @@
 <script setup>
 import { reactive, computed } from "vue";
 import ButtonSimple from "./ButtonSimple.vue";
+import ButtonInput from "./ButtonInput.vue";
 
 defineProps({
   subjectList: Array,
@@ -31,6 +37,7 @@ defineProps({
   classes: String,
   names: Array,
   dropIndex: Number,
+  buttonType: String,
 });
 
 const emit = defineEmits("buttonCallback", "valueUpdate");

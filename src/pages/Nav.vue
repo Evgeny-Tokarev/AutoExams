@@ -6,6 +6,7 @@
         <Dropdown
           :subjectList="state.subjects"
           @buttonCallback="subjectListHandler"
+          buttonType="simple"
         />
       </li>
       <li class="navigation__bar-item">
@@ -21,7 +22,7 @@
           title="Leaves"
           classes="_doubled"
           :names="['bad', 'good']"
-          @buttonCallback="listCallback"
+          @valueUpdate="changeLeave"
         />
       </li>
     </ul>
@@ -48,12 +49,27 @@ state.leaves = computed(() => store.getters.getLeaves(1));
 state.double = "_doubled";
 
 function changeEstimate(newValue, idx) {
-  console.log("trigger in nav.vue");
+  if (!newValue) {
+    newValue = "0";
+  }
   store.commit({
     type: "setEstimate",
     id: 1,
     subject: state.estimatesSubject,
     index: idx,
+    value: newValue,
+  });
+}
+
+function changeLeave(newValue, idx) {
+  if (!newValue) {
+    newValue = "0";
+  }
+  const leave = idx == 0 ? "bad" : "good";
+  store.commit({
+    type: "setLeave",
+    id: 1,
+    leaveType: leave,
     value: newValue,
   });
 }
