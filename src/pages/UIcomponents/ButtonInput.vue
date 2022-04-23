@@ -1,21 +1,51 @@
 <template>
-  <button class="simple-button" type="button" @click="clickHandler">
+  <button class="simple-button" type="button" @click="handler">
     {{ buttonText
-    }}<input v-if="true" type="text" @keyup="emitValue" :value="buttonText" />
+    }}<input
+      v-show="state.isInput"
+      type="text"
+      @keyup="emitValue"
+      @blur="blurHandler"
+      :value="buttonText"
+      ref="input"
+    />
   </button>
-  {{ buttonText }}
 </template>
 
 <script setup>
-import { reactive, computed } from "vue";
+import { reactive, ref, nextTick } from "vue";
 defineProps({
   buttonText: String,
-  dropInput: Boolean,
 });
-
+const input = ref(null);
+const state = reactive({
+  isInput: false,
+});
 const emit = defineEmits(["buttonCallback", "inputChange"]);
-function clickHandler(event) {
+async function clickHandler(event) {
   emit("buttonCallback", event);
+  state.isInput = true;
+  await nextTick();
+  input.value.focus();
+}
+
+let counter = 0;
+function handler(event) {
+  let timer;
+  counter++;
+  if (counter === 1) {
+    timer = setTimeout(function () {
+      counter = 0;
+    }, 500);
+  } else {
+    clearTimeout(timer);
+    clickHandler(event);
+    counter = 0;
+  }
+}
+
+function blurHandler() {
+  state.isInput = false;
 }
 
 function emitValue(e) {

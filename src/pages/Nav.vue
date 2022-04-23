@@ -1,12 +1,13 @@
 <template>
   <nav class="navigation">
     <ul class="navigation__bar">
-      <!-- <li class="navigation__bar-item"><ButtonSimple buttonText="First button" @buttonCallback="utilityCallback" /></li> -->
       <li class="navigation__bar-item">
         <Dropdown
           :subjectList="state.subjects"
           @buttonCallback="subjectListHandler"
           buttonType="simple"
+          :addable="true"
+          @addItem="addSubject"
         />
       </li>
       <li class="navigation__bar-item">
@@ -14,6 +15,7 @@
           :subjectList="state.estimates"
           :title="state.estimatesSubject"
           @valueUpdate="changeEstimate"
+          :addable="true"
         />
       </li>
       <li class="navigation__bar-item">
@@ -34,6 +36,7 @@ import ButtonSimple from "./UIcomponents/ButtonSimple.vue";
 import Dropdown from "./UIcomponents/Dropdown.vue";
 import { computed, reactive } from "vue";
 import { useStore } from "vuex";
+import { writeUserData } from "../firestore.js";
 
 const store = useStore();
 const state = reactive({
@@ -47,6 +50,10 @@ const state = reactive({
 state.estimatesSubject = state.subjects[0];
 state.leaves = computed(() => store.getters.getLeaves(1));
 state.double = "_doubled";
+state.student = computed(() => store.getters.getStudent(1));
+console.log("student: " + state.student.id);
+// writeUserData(state.student);
+// // getUserData();
 
 function changeEstimate(newValue, idx) {
   if (!newValue) {
@@ -71,6 +78,12 @@ function changeLeave(newValue, idx) {
     id: 1,
     leaveType: leave,
     value: newValue,
+  });
+}
+function addSubject() {
+  store.commit({
+    type: "setNewSubject",
+    id: 1,
   });
 }
 

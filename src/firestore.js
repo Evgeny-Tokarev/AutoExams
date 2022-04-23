@@ -1,5 +1,13 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, get, child } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  child,
+  //   push,
+  //   update,
+} from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAD_BTx-_LCqLtFBXbTmUaWieE030kNW8U",
@@ -15,16 +23,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const dbRef = ref(getDatabase(app));
 
-function writeUserData() {
+function writeUserData(props) {
+  console.log(props);
   const db = getDatabase(app);
-  set(ref(db, "users/" + 1), {
-    username: "name",
-    email: "email",
+  set(ref(db, "student/" + props.id), {
+    id: props.id,
+    name: props.name,
+    subjects: props.subjects,
+    bad_leaves: props.bad_leaves,
+    good_leaves: props.good_leaves,
   });
 }
 
-function getUserData() {
-  get(child(dbRef, `users/1`))
+function getUserData(id) {
+  get(child(dbRef, `users/${id}`))
     .then((snapshot) => {
       if (snapshot.exists()) {
         console.log(snapshot.val());
@@ -36,4 +48,5 @@ function getUserData() {
       console.error(error);
     });
 }
+// function updateUserData() {}
 export { getUserData, writeUserData };

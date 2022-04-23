@@ -10,7 +10,7 @@ defineProps({
   buttonText: String,
 });
 
-const emit = defineEmits("buttonCallback");
+const emit = defineEmits(["buttonCallback"]);
 
 function clickHandler(event) {
   emit("buttonCallback", event);

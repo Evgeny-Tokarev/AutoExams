@@ -2,10 +2,6 @@ import { createApp } from "vue";
 import App from "./pages/App.vue";
 import { createStore } from "vuex";
 import "./main.scss";
-import { getUserData, writeUserData } from "./firestore.js";
-
-getUserData();
-writeUserData();
 
 const app = createApp(App);
 const store = createStore({
@@ -16,13 +12,13 @@ const store = createStore({
         id: 1,
         name: "Vasya",
         subjects: [
-          { name: "Math", estimates: [5, 5, 4] },
-          { name: "Physics", estimates: [3, 5, 4] },
-          { name: "English", estimates: [5, 5, 4, 3, 4] },
-          { name: "Chemistry", estimates: [5, 4, 4] },
+          { name: "Math", estimates: ["5", "5", "4"] },
+          { name: "Physics", estimates: ["3", "5", "4"] },
+          { name: "English", estimates: ["5", "5", "4", "3", "4"] },
+          { name: "Chemistry", estimates: ["5", "4", "4"] },
         ],
-        bad_leaves: 2,
-        good_leaves: 4,
+        bad_leaves: "2",
+        good_leaves: "8",
       },
       { id: 2, name: "Petya" },
     ],
@@ -57,6 +53,12 @@ const store = createStore({
         state.students.find((student) => student.id === id).good_leaves,
       ];
     },
+    getStudent: (state) => (id) => {
+      console.log(
+        "name: " + state.students.find((student) => student.id === id).name
+      );
+      return state.students.find((student) => student.id === id);
+    },
   },
   mutations: {
     setEstimate: (state, payload) => {
@@ -70,6 +72,11 @@ const store = createStore({
       const leave = payload.leaveType === "bad" ? "bad_leaves" : "good_leaves";
       state.students.find((student) => student.id === payload.id)[leave] =
         payload.value;
+    },
+    setNewSubject: (state, payload) => {
+      state.students
+        .find((student) => student.id === payload.id)
+        .subjects.push({ name: "New", estimates: [] });
     },
   },
 });

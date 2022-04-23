@@ -15,10 +15,13 @@ const isDev = process.env.NODE_ENV === "development";
 
 module.exports = {
   target: "web",
-  mode: "production",
-  entry: "./src/main.js",
+  mode: "development",
+  entry: {
+    main: "./src/main.js",
+    firestore: "./src/firestore.js",
+  },
   output: {
-    filename: "index.js",
+    filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist"),
   },
   devServer: {
@@ -33,6 +36,12 @@ module.exports = {
   },
   resolve: {
     extensions: ["*", ".js", ".vue"],
+  },
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      chunks: "all",
+    },
   },
   module: {
     rules: [

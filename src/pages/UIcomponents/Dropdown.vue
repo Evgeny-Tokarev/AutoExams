@@ -14,7 +14,7 @@
       <ButtonSimple
         v-if="buttonType == 'simple'"
         :buttonText="text"
-        @button-callback="clickHandler($event)"
+        @buttonCallback="clickHandler($event)"
       />
       <ButtonInput
         v-else
@@ -23,6 +23,12 @@
         @input-change="updateHandler($event, index)"
       />
     </li>
+    <ButtonSimple
+      v-if="addable === true"
+      buttonText="Add"
+      class="subject-list__item subject-list__item_type_add"
+      @buttonCallback="addItem($event)"
+    />
   </ul>
 </template>
 
@@ -38,9 +44,13 @@ defineProps({
   names: Array,
   dropIndex: Number,
   buttonType: String,
+  addable: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-const emit = defineEmits("buttonCallback", "valueUpdate");
+const emit = defineEmits("buttonCallback", "valueUpdate", "addItem");
 
 function clickHandler(e) {
   emit("buttonCallback", e);
@@ -48,6 +58,9 @@ function clickHandler(e) {
 function updateHandler(...props) {
   const [value, idx] = props;
   emit("valueUpdate", value, idx);
+}
+function addItem(...props) {
+  emit("addItem", props);
 }
 </script>
 <style lang="scss" scoped>
@@ -77,6 +90,10 @@ function updateHandler(...props) {
   &__item_doubled {
     display: flex;
     justify-content: space-between;
+  }
+  &__item_type_add {
+    width: 80%;
+    margin: 1rem auto 0 auto;
   }
 }
 </style>
