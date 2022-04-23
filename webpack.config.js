@@ -54,6 +54,11 @@ module.exports = {
       },
       {
         test: /\.js$/,
+        enforce: "pre",
+        use: ["source-map-loader"],
+      },
+      {
+        test: /\.js$/,
         loader: "babel-loader",
         exclude: /node_modules/,
       },
@@ -84,6 +89,10 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      __VUE_OPTIONS_API__: true,
+      __VUE_PROD_DEVTOOLS__: false,
+    }),
     new CleanWebpackPlugin(),
     new VueLoaderPlugin(),
     new ESLintPlugin({

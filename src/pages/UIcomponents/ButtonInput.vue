@@ -22,24 +22,31 @@ const state = reactive({
   isInput: false,
 });
 const emit = defineEmits(["buttonCallback", "inputChange"]);
-async function clickHandler(event) {
-  emit("buttonCallback", event);
+
+async function dblClickHandler(event) {
   state.isInput = true;
   await nextTick();
   input.value.focus();
 }
 
+function clickHandler(event) {
+  emit("buttonCallback", event);
+}
+
 let counter = 0;
+let timer;
 function handler(event) {
-  let timer;
   counter++;
   if (counter === 1) {
     timer = setTimeout(function () {
       counter = 0;
+      console.log("timeout callback" + timer);
+      clickHandler(event);
     }, 500);
   } else {
     clearTimeout(timer);
-    clickHandler(event);
+    console.log("timeout clear" + timer);
+    dblClickHandler(event);
     counter = 0;
   }
 }
@@ -61,6 +68,7 @@ function emitValue(e) {
   border: 1px solid green;
   border-radius: 5px;
   min-width: 100px;
+  height: 2.5rem;
   text-align: center;
   cursor: pointer;
   &:hover {
@@ -72,6 +80,8 @@ function emitValue(e) {
   }
   & input {
     position: absolute;
+    padding: 0;
+    margin: 0;
     left: 0;
     top: 0;
     right: 0;

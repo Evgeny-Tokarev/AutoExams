@@ -18,16 +18,20 @@
       />
       <ButtonInput
         v-else
-        :dropInput="dropIndex == index"
         :buttonText="text"
-        @input-change="updateHandler($event, index)"
+        @buttonCallback="clickHandler($event, index)"
+        @inputChange="updateHandler($event, index)"
+      />
+      <ButtonSimple
+        buttonText="X"
+        @buttonCallback="removeHandler(title, index)"
       />
     </li>
     <ButtonSimple
       v-if="addable === true"
       buttonText="Add"
       class="subject-list__item subject-list__item_type_add"
-      @buttonCallback="addItem($event)"
+      @buttonCallback="addItem(title)"
     />
   </ul>
 </template>
@@ -42,7 +46,6 @@ defineProps({
   title: String,
   classes: String,
   names: Array,
-  dropIndex: Number,
   buttonType: String,
   addable: {
     type: Boolean,
@@ -50,17 +53,29 @@ defineProps({
   },
 });
 
-const emit = defineEmits("buttonCallback", "valueUpdate", "addItem");
+const emit = defineEmits(
+  "buttonCallback",
+  "valueUpdate",
+  "addItem",
+  "removeItem"
+);
 
-function clickHandler(e) {
-  emit("buttonCallback", e);
+function clickHandler(event, idx) {
+  emit("buttonCallback", event, idx);
 }
+
+function removeHandler(title, idx) {
+  console.log("removing");
+  emit("removeItem", title, idx);
+}
+
 function updateHandler(...props) {
   const [value, idx] = props;
   emit("valueUpdate", value, idx);
 }
-function addItem(...props) {
-  emit("addItem", props);
+function addItem(title) {
+  console.log("addItem  " + title);
+  emit("addItem", title);
 }
 </script>
 <style lang="scss" scoped>
@@ -86,6 +101,8 @@ function addItem(...props) {
     margin-top: 1rem;
     width: 100%;
     padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
   }
   &__item_doubled {
     display: flex;

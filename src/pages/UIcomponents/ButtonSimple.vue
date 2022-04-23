@@ -5,7 +5,6 @@
 </template>
 
 <script setup>
-import { reactive, computed } from "vue";
 defineProps({
   buttonText: String,
 });
@@ -23,7 +22,8 @@ function clickHandler(event) {
   font-size: 2rem;
   border: 1px solid green;
   border-radius: 5px;
-  min-width: 100px;
+  min-width: 10px;
+  height: 2.5rem;
   text-align: center;
   cursor: pointer;
   &:hover {
