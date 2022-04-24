@@ -4,9 +4,10 @@
     <ul class="navigation__bar">
       <li class="navigation__bar-item">
         <Dropdown
+          name="Students"
           :subjectList="state.students"
           @buttonCallback="studentListHandler"
-          @valueUpdate="studentSubject"
+          @valueUpdate="changeStudent"
           :addable="true"
           :removable="true"
           @addItem="addStudent"
@@ -15,18 +16,20 @@
       </li>
       <li class="navigation__bar-item">
         <Dropdown
+          :name="!!state.estimatesSubject"
+          :title="state.subjects ? null : 'Add subject'"
           :subjectList="state.subjects"
           @buttonCallback="subjectListHandler"
           @valueUpdate="changeSubject"
-          :addable="true"
+          :addable="state.estimatesSubject ? true : false"
           :removable="true"
           @addItem="addSubject"
           @removeItem="removeSubject"
         />
       </li>
-      <li class="navigation__bar-item">
+      <li class="navigation__bar-item" v-if="!!state.estimatesSubject">
         <Dropdown
-          v-if="!!state.estimatesSubject"
+          name="Estimates"
           :subjectList="state.estimates"
           :title="state.estimatesSubject"
           @valueUpdate="changeEstimate"
@@ -38,10 +41,11 @@
       </li>
       <li class="navigation__bar-item">
         <Dropdown
+          name="Absenteeism"
           :subjectList="state.leaves"
           title="Leaves"
           classes="_doubled"
-          :names="['bad', 'good']"
+          :subjectNames="['bad', 'good']"
           @valueUpdate="changeLeave"
         />
       </li>
@@ -58,8 +62,12 @@ import { writeUserData } from "../firestore.js";
 
 const store = useStore();
 const state = reactive({
+  studentsName: computed(() => {
+    return store.getters.getStudent(state.studentID)
+      ? store.getters.getStudent(state.studentID).name
+      : null;
+  }),
   students: computed(() => {
-    console.log(store.getters);
     return store.getters.getStudents();
   }),
   studentID: computed(() => {
@@ -70,7 +78,9 @@ const state = reactive({
     return store.getters.getStudentID();
   }),
   estimatesSubject: computed(() => {
-    console.log(store.getters.getEstimatesSubject(state.studentID));
+    console.log(
+      "estimatesSubject " + store.getters.getEstimatesSubject(state.studentID)
+    );
     return store.getters.getEstimatesSubject(state.studentID);
   }),
   estimatesSubjectIdx: computed(() => {
@@ -107,6 +117,16 @@ const state = reactive({
 state.double = "_doubled";
 // writeUserData(state.student);
 // // getUserData();
+function changeStudent(newValue, idx) {
+  if (!newValue) {
+    newValue = " ";
+  }
+  store.commit({
+    type: "setStudent",
+    index: idx,
+    value: newValue,
+  });
+}
 
 function changeEstimate(newValue, idx) {
   if (!newValue) {
@@ -121,7 +141,7 @@ function changeEstimate(newValue, idx) {
   });
 }
 
-function changeEsimatesSubject(subject) {
+function changeEstimatesSubject(subject) {
   store.commit({
     type: "setEstimatesSubject",
     id: state.studentID,
@@ -140,8 +160,25 @@ function changeSubject(newValue, idx) {
     value: newValue,
   });
 }
+function changeCurrentStudent(newValue) {
+  if (newValue.length > 10) {
+    newValue = newValue.slice(0, 10);
+  }
+  store.commit({
+    type: "setCurrentStudent",
+    value: newValue,
+  });
+}
 
-function removeSubject(idx) {
+function removeStudent(title, idx) {
+  console.log("remove " + idx);
+  store.commit({
+    type: "deleteStudent",
+    index: idx,
+  });
+}
+
+function removeSubject(title, idx) {
   console.log("remove " + idx);
   store.commit({
     type: "deleteSubject",
@@ -178,6 +215,13 @@ function addSubject() {
     id: state.studentID,
   });
 }
+
+function addStudent() {
+  store.commit({
+    type: "setNewStudent",
+  });
+}
+
 function addEstimate(title) {
   store.commit({
     type: "setNewEstimate",
@@ -185,36 +229,36 @@ function addEstimate(title) {
     name: title,
   });
 }
-
+function studentListHandler(event) {
+  console.log(event.target.textContent);
+  changeCurrentStudent(event.target.textContent);
+}
 function subjectListHandler(event) {
-  console.log(event.target.textContent.length);
   const value = event.target.textContent;
   if (!value) {
     value = " ";
   }
-  changeEsimatesSubject(event.target.textContent);
+  changeEstimatesSubject(event.target.textContent);
 }
 </script>
 
 <style lang="scss" scoped>
 .navigation {
-  justify-content: center;
+  padding: 1rem;
   font-size: 2rem;
-  display: flex;
+  text-align: center;
   width: 100%;
+  margin: 0 auto;
   &__bar {
     display: flex;
     list-style: none;
     padding: 0;
-    width: 80%;
-    justify-content: space-around;
+    gap: 1rem;
+    justify-content: space-between;
+    flex-wrap: wrap;
     &-item {
       flex: 0 1 300px;
       cursor: pointer;
-      margin-right: 1rem;
-      &:last-child {
-        margin-right: 0;
-      }
     }
   }
 }

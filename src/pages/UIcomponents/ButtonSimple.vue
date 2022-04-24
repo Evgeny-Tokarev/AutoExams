@@ -18,7 +18,6 @@ function clickHandler(event) {
 
 <style lang="scss" scoped>
 .simple-button {
-  position: relative;
   font-size: 2rem;
   border: 1px solid green;
   border-radius: 5px;
@@ -26,6 +25,10 @@ function clickHandler(event) {
   height: 2.5rem;
   text-align: center;
   cursor: pointer;
+  &_type_add {
+    width: 80%;
+    margin: 1rem auto 0 auto;
+  }
   &:hover {
     background-color: rgb(163, 202, 173);
   }

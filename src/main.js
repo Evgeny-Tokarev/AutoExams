@@ -30,7 +30,6 @@ const store = createStore({
     },
     getStudents: (state) => () => {
       const arr = [];
-      console.log(state.students.forEach((student) => student.name));
       state.students.forEach((student) => {
         arr.push(student.name);
       });
@@ -46,21 +45,27 @@ const store = createStore({
     },
     getEstimatesSubject: (state) => (id) => {
       const student = state.students.find((student) => student.id === id);
-      if (
-        student.subjects.find(
-          (currentSubject) => currentSubject.isEstimatesSubject === true
-        )
-      ) {
-        return student.subjects.find(
-          (currentSubject) => currentSubject.isEstimatesSubject === true
-        ).name;
-      } else {
-        if (student.subjects.length) {
-          student.subjects[0].isEstimatesSubject = true;
-          return student.subjects[0];
+      if (student) {
+        if (
+          student.subjects
+            ? student.subjects.find(
+                (currentSubject) => currentSubject.isEstimatesSubject === true
+              )
+            : false
+        ) {
+          return student.subjects.find(
+            (currentSubject) => currentSubject.isEstimatesSubject === true
+          ).name;
         } else {
-          return null;
+          if (student.subjects ? student.subjects.length : false) {
+            student.subjects[0].isEstimatesSubject = true;
+            return student.subjects[0];
+          } else {
+            return null;
+          }
         }
+      } else {
+        return null;
       }
     },
 
@@ -76,10 +81,12 @@ const store = createStore({
       console.log("getSubjectsNames " + id);
       const student = state.students.find((student) => student.id === id);
       const arr = [];
-      if (student.subjects) {
-        student.subjects.forEach((element) => {
-          arr.push(element.name);
-        });
+      if (student) {
+        if (student.subjects) {
+          student.subjects.forEach((element) => {
+            arr.push(element.name);
+          });
+        }
       }
       return arr;
     },
@@ -93,19 +100,42 @@ const store = createStore({
       } else return [];
     },
     getLeaves: (state) => (id) => {
-      return [
-        state.students.find((student) => student.id === id).bad_leaves,
-        state.students.find((student) => student.id === id).good_leaves,
-      ];
+      if (state.students.length) {
+        return [
+          state.students.find((student) => student.id === id).bad_leaves,
+          state.students.find((student) => student.id === id).good_leaves,
+        ];
+      } else return [];
     },
     getStudent: (state) => (id) => {
-      console.log(
-        "name: " + state.students.find((student) => student.id === id).name
-      );
-      return state.students.find((student) => student.id === id);
+      if (state.students) {
+        return state.students.find((student) => student.id === id) || null;
+      } else return null;
     },
   },
   mutations: {
+    setStudent: (state, payload) => {
+      console.log("setStudent  " + payload.index);
+      state.students.find((student, index) => index === payload.index).name =
+        payload.value;
+    },
+    setNewStudent: (state, payload) => {
+      console.log("setNewStudent  " + payload);
+      const nextID = state.students.length + 1;
+      state.students.push({
+        id: nextID,
+        name: `Student${nextID}`,
+        subjects: [],
+        bad_leaves: "0",
+        good_leaves: "0",
+      });
+    },
+    setCurrentStudent: (state, payload) => {
+      console.log("setCurrentStudent  " + payload.value);
+      state.students.forEach((student) => {
+        student.current = student.name === payload.value ? true : false;
+      });
+    },
     setStudentID: (state, payload) => {
       state.students.forEach((student, index) => {
         student.current = index === payload.idx ? true : false;
@@ -163,15 +193,37 @@ const store = createStore({
         (student) => student.id === payload.id
       );
       let counter = 0;
-      student.subjects.forEach((subject) => {
-        if (subject.name.slice(0, 3) === "New") {
-          counter++;
-        }
-      });
+      if (student.subjects) {
+        student.subjects.forEach((subject) => {
+          if (subject.name.slice(0, 7) === `Subject`) {
+            counter++;
+          }
+        });
+      } else {
+        student.subjects = [];
+      }
+
       if (counter === 0) {
         counter = "";
       }
-      student.subjects.push({ name: `New${counter}`, estimates: [] });
+      student.subjects.push({ name: `Subject${counter + 1}`, estimates: [] });
+    },
+    deleteStudent: (state, payload) => {
+      console.log(payload.index);
+
+      const currentID = state.students.find(
+        (student) => student.current === true
+      ).id;
+
+      if (currentID === payload.index + 1) {
+        const nextIdx =
+          state.students.length - 1 === payload.index ? 0 : payload.index + 1;
+        console.log("next " + nextIdx);
+        state.students.forEach((student, index) => {
+          student.current = index === nextIdx ? true : false;
+        });
+      }
+      state.students.splice(payload.index, 1);
     },
     deleteSubject: (state, payload) => {
       console.log(payload.index);
@@ -207,6 +259,11 @@ const store = createStore({
       console.log("setting defaults");
       if (state.students) {
         if (state.students.length) {
+          commit({
+            type: "setStudentID",
+            idx: 0,
+          });
+        } else {
           commit({
             type: "setStudentID",
             idx: 0,

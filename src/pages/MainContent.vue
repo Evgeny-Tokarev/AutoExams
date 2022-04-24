@@ -6,14 +6,13 @@
 </template>
 
 <script>
-
 import Nav from "./Nav.vue";
 import Footer from "./Footer.vue";
 import { reactive, computed } from "vue";
 export default {
-    components: {
-      Nav,
-      Footer
+  components: {
+    Nav,
+    Footer,
   },
   setup() {
     const state = reactive({
@@ -40,7 +39,7 @@ export default {
   justify-content: space-between;
   font-size: 24px;
   width: 80%;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0 auto;
   background-color: #ccc;
 }
