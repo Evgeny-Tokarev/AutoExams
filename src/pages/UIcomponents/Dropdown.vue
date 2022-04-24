@@ -23,6 +23,7 @@
         @inputChange="updateHandler($event, index)"
       />
       <ButtonSimple
+        v-if="removable === true"
         buttonText="X"
         @buttonCallback="removeHandler(title, index)"
       />
@@ -48,6 +49,10 @@ defineProps({
   names: Array,
   buttonType: String,
   addable: {
+    type: Boolean,
+    default: false,
+  },
+  removable: {
     type: Boolean,
     default: false,
   },

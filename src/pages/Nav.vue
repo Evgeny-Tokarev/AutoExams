@@ -1,12 +1,25 @@
 <template>
   <nav class="navigation">
+    <h2>{{ state.studentsName }}</h2>
     <ul class="navigation__bar">
+      <li class="navigation__bar-item">
+        <Dropdown
+          :subjectList="state.students"
+          @buttonCallback="studentListHandler"
+          @valueUpdate="studentSubject"
+          :addable="true"
+          :removable="true"
+          @addItem="addStudent"
+          @removeItem="removeStudent"
+        />
+      </li>
       <li class="navigation__bar-item">
         <Dropdown
           :subjectList="state.subjects"
           @buttonCallback="subjectListHandler"
           @valueUpdate="changeSubject"
           :addable="true"
+          :removable="true"
           @addItem="addSubject"
           @removeItem="removeSubject"
         />
@@ -18,6 +31,7 @@
           :title="state.estimatesSubject"
           @valueUpdate="changeEstimate"
           :addable="true"
+          :removable="true"
           @addItem="addEstimate"
           @removeItem="removeEstimate"
         />
@@ -44,7 +58,17 @@ import { writeUserData } from "../firestore.js";
 
 const store = useStore();
 const state = reactive({
-  studentID: 1,
+  students: computed(() => {
+    console.log(store.getters);
+    return store.getters.getStudents();
+  }),
+  studentID: computed(() => {
+    if (!store.getters.getStudentID()) {
+      store.dispatch("setDefaults");
+    }
+    console.log(store.getters.getStudentID());
+    return store.getters.getStudentID();
+  }),
   estimatesSubject: computed(() => {
     console.log(store.getters.getEstimatesSubject(state.studentID));
     return store.getters.getEstimatesSubject(state.studentID);
@@ -80,7 +104,6 @@ const state = reactive({
   }),
 });
 
-changeEsimatesSubject("Math");
 state.double = "_doubled";
 // writeUserData(state.student);
 // // getUserData();
@@ -128,10 +151,11 @@ function removeSubject(idx) {
 }
 
 function removeEstimate(title, idx) {
-  console.log("remove " + idx);
+  console.log("remove " + idx + title);
   store.commit({
     type: "deleteEstimate",
     id: state.studentID,
+    name: title,
     index: idx,
   });
 }

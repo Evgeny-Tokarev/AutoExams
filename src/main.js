@@ -6,7 +6,6 @@ import "./main.scss";
 const app = createApp(App);
 const store = createStore({
   state: {
-    count: 4,
     students: [
       {
         id: 1,
@@ -24,6 +23,19 @@ const store = createStore({
     ],
   },
   getters: {
+    getStudentID: (state) => () => {
+      return state.students.find((student) => student.current === true)
+        ? state.students.find((student) => student.current === true).id
+        : null;
+    },
+    getStudents: (state) => () => {
+      const arr = [];
+      console.log(state.students.forEach((student) => student.name));
+      state.students.forEach((student) => {
+        arr.push(student.name);
+      });
+      return arr;
+    },
     getSubjectsName: (state) => (id, idx) => {
       console.log("getSubjectsName  " + id + idx);
       if (idx > -1) {
@@ -42,7 +54,14 @@ const store = createStore({
         return student.subjects.find(
           (currentSubject) => currentSubject.isEstimatesSubject === true
         ).name;
-      } else return null;
+      } else {
+        if (student.subjects.length) {
+          student.subjects[0].isEstimatesSubject = true;
+          return student.subjects[0];
+        } else {
+          return null;
+        }
+      }
     },
 
     getEstimatesSubjectIdx: (state) => (id) => {
@@ -54,13 +73,14 @@ const store = createStore({
         );
     },
     getSubjectsNames: (state) => (id) => {
-      console.log(state);
+      console.log("getSubjectsNames " + id);
+      const student = state.students.find((student) => student.id === id);
       const arr = [];
-      state.students
-        .find((student) => student.id === id)
-        .subjects.forEach((element) => {
+      if (student.subjects) {
+        student.subjects.forEach((element) => {
           arr.push(element.name);
         });
+      }
       return arr;
     },
     getSubjectEstimates: (state) => (id, subject, source) => {
@@ -86,6 +106,11 @@ const store = createStore({
     },
   },
   mutations: {
+    setStudentID: (state, payload) => {
+      state.students.forEach((student, index) => {
+        student.current = index === payload.idx ? true : false;
+      });
+    },
     setEstimatesSubject: (state, payload) => {
       console.log("setEsimatesSubject  " + payload.value);
       state.students
@@ -162,18 +187,32 @@ const store = createStore({
           student.subjects.length - 1 === payload.index ? 0 : payload.index + 1;
         console.log("next " + nextIdx);
         student.subjects.forEach((currentSubject, index) => {
-          console.log();
           currentSubject.isEstimatesSubject = index === nextIdx ? true : false;
         });
       }
       student.subjects.splice(payload.index, 1);
-      console.log(student);
     },
     deleteEstimate: (state, payload) => {
-      console.log(payload.index);
+      console.log(payload.index, payload.name);
       const student = state.students.find(
         (student) => student.id === payload.id
       );
+      student.subjects
+        .find((subject) => subject.name === payload.name)
+        .estimates.splice(payload.index, 1);
+    },
+  },
+  actions: {
+    setDefaults({ commit, state }) {
+      console.log("setting defaults");
+      if (state.students) {
+        if (state.students.length) {
+          commit({
+            type: "setStudentID",
+            idx: 0,
+          });
+        }
+      }
     },
   },
 });
