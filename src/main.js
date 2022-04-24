@@ -45,6 +45,7 @@ const store = createStore({
     },
     getEstimatesSubject: (state) => (id) => {
       const student = state.students.find((student) => student.id === id);
+      // console.log("getEstimatesSubject " + );
       if (student) {
         if (
           student.subjects
@@ -159,7 +160,7 @@ const store = createStore({
         ).estimates[payload.index] = payload.value;
     },
     setNewEstimate: (state, payload) => {
-      console.log(payload);
+      console.log(state);
       state.students
         .find((student) => student.id === payload.id)
         .subjects.find((currentSubject) => currentSubject.name === payload.name)

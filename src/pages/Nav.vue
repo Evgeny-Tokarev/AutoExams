@@ -14,31 +14,35 @@
           @removeItem="removeStudent"
         />
       </li>
-      <li class="navigation__bar-item">
-        <Dropdown
-          :name="!!state.estimatesSubject"
-          :title="state.subjects ? null : 'Add subject'"
-          :subjectList="state.subjects"
-          @buttonCallback="subjectListHandler"
-          @valueUpdate="changeSubject"
-          :addable="state.estimatesSubject ? true : false"
-          :removable="true"
-          @addItem="addSubject"
-          @removeItem="removeSubject"
-        />
-      </li>
-      <li class="navigation__bar-item" v-if="!!state.estimatesSubject">
-        <Dropdown
-          name="Estimates"
-          :subjectList="state.estimates"
-          :title="state.estimatesSubject"
-          @valueUpdate="changeEstimate"
-          :addable="true"
-          :removable="true"
-          @addItem="addEstimate"
-          @removeItem="removeEstimate"
-        />
-      </li>
+      <Transition name="bounce">
+        <li class="navigation__bar-item" v-show="state.students.length">
+          <Dropdown
+            name="Subjects"
+            :title="state.subjects ? null : 'Add subject'"
+            :subjectList="state.subjects"
+            @buttonCallback="subjectListHandler"
+            @valueUpdate="changeSubject"
+            :addable="state.students.length ? true : false"
+            :removable="true"
+            @addItem="addSubject"
+            @removeItem="removeSubject"
+          />
+        </li>
+      </Transition>
+      <Transition name="bounce">
+        <li class="navigation__bar-item" v-if="!!state.estimatesSubject">
+          <Dropdown
+            name="Estimates"
+            :subjectList="state.estimates"
+            :title="state.estimatesSubject"
+            @valueUpdate="changeEstimate"
+            :addable="true"
+            :removable="true"
+            @addItem="addEstimate"
+            @removeItem="removeEstimate"
+          />
+        </li>
+      </Transition>
       <li class="navigation__bar-item">
         <Dropdown
           name="Absenteeism"
@@ -95,7 +99,7 @@ const state = reactive({
     console.log(store.getters.getSubjectsNames(state.studentID));
     return store.getters.getSubjectsNames(state.studentID);
   }),
-  estimates: computed((...args) => {
+  estimates: computed(() => {
     console.log(
       store.getters.getSubjectEstimates(
         state.studentID,
@@ -243,6 +247,23 @@ function subjectListHandler(event) {
 </script>
 
 <style lang="scss" scoped>
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 .navigation {
   padding: 1rem;
   font-size: 2rem;

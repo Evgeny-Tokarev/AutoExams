@@ -1,34 +1,33 @@
 <template>
   <main class="main-content">
     <Nav />
+    <Content />
     <Footer />
   </main>
 </template>
 
-<script>
+<script setup>
 import Nav from "./Nav.vue";
 import Footer from "./Footer.vue";
+import Content from "./Content.vue";
 import { reactive, computed } from "vue";
-export default {
-  components: {
-    Nav,
-    Footer,
-  },
-  setup() {
-    const state = reactive({
-      count: 0,
-      double: computed(() => state.count * 2),
-    });
-    function increment() {
-      state.count++;
-    }
 
-    return {
-      state,
-      increment,
-    };
+defineProps({
+  subjectList: Array,
+  title: String,
+  classes: String,
+  subjectNames: Array,
+  buttonType: String,
+  name: String,
+  addable: {
+    type: Boolean,
+    default: false,
   },
-};
+  removable: {
+    type: Boolean,
+    default: false,
+  },
+});
 </script>
 
 <style scoped>

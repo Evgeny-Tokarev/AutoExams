@@ -7,40 +7,44 @@
         :buttonText="state.isDropped ? 'Close' : 'Open'"
       />
     </div>
-    <ul class="dropdown__subject-list" v-if="state.isDropped">
-      <li v-if="!!title" class="dropdown__title">{{ title }}</li>
-      <li
-        v-for="(text, index) in subjectList"
-        :key="index"
-        :class="
-          classes ? 'dropdown__item dropdown__item' + classes : 'dropdown__item'
-        "
-      >
-        <span v-if="!!classes">{{ subjectNames[index] }} </span>
+    <Transition name="slide-fade">
+      <ul class="dropdown__subject-list" v-if="state.isDropped">
+        <li v-if="!!title" class="dropdown__title">{{ title }}</li>
+        <li
+          v-for="(text, index) in subjectList"
+          :key="index"
+          :class="
+            classes
+              ? 'dropdown__item dropdown__item' + classes
+              : 'dropdown__item'
+          "
+        >
+          <span v-if="!!classes">{{ subjectNames[index] }} </span>
+          <ButtonSimple
+            v-if="buttonType == 'simple'"
+            :buttonText="text"
+            @buttonCallback="clickHandler($event)"
+          />
+          <ButtonInput
+            v-else
+            :buttonText="text"
+            @buttonCallback="clickHandler($event, index)"
+            @inputChange="updateHandler($event, index)"
+          />
+          <ButtonSimple
+            v-if="removable === true"
+            buttonText="X"
+            @buttonCallback="removeHandler(title, index)"
+          />
+        </li>
         <ButtonSimple
-          v-if="buttonType == 'simple'"
-          :buttonText="text"
-          @buttonCallback="clickHandler($event)"
+          v-if="addable === true"
+          buttonText="Add"
+          class="simple-button_type_add"
+          @buttonCallback="addItem(title)"
         />
-        <ButtonInput
-          v-else
-          :buttonText="text"
-          @buttonCallback="clickHandler($event, index)"
-          @inputChange="updateHandler($event, index)"
-        />
-        <ButtonSimple
-          v-if="removable === true"
-          buttonText="X"
-          @buttonCallback="removeHandler(title, index)"
-        />
-      </li>
-      <ButtonSimple
-        v-if="addable === true"
-        buttonText="Add"
-        class="simple-button_type_add"
-        @buttonCallback="addItem(title)"
-      />
-    </ul>
+      </ul>
+    </Transition>
   </div>
 </template>
 
@@ -100,6 +104,19 @@ function addItem(title) {
 }
 </script>
 <style lang="scss" scoped>
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
+}
 .dropdown {
   &__header {
     border: 1px solid green;
