@@ -49,7 +49,7 @@
           :subjectList="state.leaves"
           title="Все пропуски"
           classes="_doubled"
-          :subjectNames="['Неуважительные', 'Уважительные']"
+          :subjectNames="['Неуважительно', 'Уважительно']"
           @valueUpdate="changeLeave"
         />
       </li>
@@ -124,7 +124,7 @@ function changeEstimate(newValue, idx) {
       id: state.studentID,
       subject: state.estimatesSubject,
       index: idx,
-      value: number,
+      value: number.toString(),
     });
   }
 }
@@ -244,12 +244,17 @@ function subjectListHandler(event) {
     display: flex;
     list-style: none;
     padding: 0;
-    gap: 0.6%;
+    gap: 10px;
     justify-content: space-between;
     flex-wrap: wrap;
     &-item {
-      flex: 0 0 24%;
+      flex: 0 0 22%;
     }
+  }
+}
+@media screen and (max-width: 992px) {
+  .navigation__bar-item {
+    flex: 0 0 48%;
   }
 }
 </style>

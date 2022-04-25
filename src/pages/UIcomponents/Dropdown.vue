@@ -45,13 +45,22 @@
         />
       </ul>
     </Transition>
+    <Transition name="bounce" v-if="state.isPopup">
+      <Popup
+        popupType="alert"
+        subject="элемент"
+        @discard="discardHandler"
+        @submit="submitHandler"
+      />
+    </Transition>
   </div>
 </template>
 
 <script setup>
-import { reactive, computed } from "vue";
+import { reactive } from "vue";
 import ButtonSimple from "./ButtonSimple.vue";
 import ButtonInput from "./ButtonInput.vue";
+import Popup from "./Popup.vue";
 
 defineProps({
   subjectList: Array,
@@ -72,16 +81,19 @@ defineProps({
 
 const state = reactive({
   isDropped: false,
+  isPopup: false,
+  titleToRemove: null,
+  indexToRemove: null,
 });
 const emit = defineEmits(
   "buttonCallback",
   "valueUpdate",
   "addItem",
-  "removeItem"
+  "removeItem",
+  "appearPopup"
 );
 
 function dropHandler() {
-  console.log("droping");
   state.isDropped = !state.isDropped;
 }
 
@@ -90,8 +102,16 @@ function clickHandler(event, idx) {
 }
 
 function removeHandler(title, idx) {
-  console.log("removing");
-  emit("removeItem", title, idx);
+  state.isPopup = true;
+  state.titleToRemove = title;
+  state.indexToRemove = idx;
+}
+function submitHandler() {
+  emit("removeItem", state.titleToRemove, state.indexToRemove);
+  state.isPopup = false;
+}
+function discardHandler() {
+  state.isPopup = false;
 }
 
 function updateHandler(...props) {
@@ -131,6 +151,7 @@ function addItem(title) {
     align-content: center;
     justify-content: space-between;
     padding: 0.5rem;
+    gap: 0.5rem;
   }
   &__name {
     margin: 0;

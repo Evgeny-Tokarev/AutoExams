@@ -1,5 +1,5 @@
 html {
-    font-size: 12px;
+    font-size: 11px;
     box-sizing: border-box;
 }
 body {
@@ -8,4 +8,24 @@ body {
 }
 * {
     box-sizing: border-box;
+}
+@media screen and (max-width: 1200px) {
+    html {
+    font-size: 10px;
+  }
+}
+@media screen and (max-width: 992px) {
+    html {
+    font-size: 9px;
+  }
+}
+@media screen and (max-width: 768px) {
+    html {
+    font-size: 8px;
+  }
+}
+@media screen and (max-width: 600px) {
+    html {
+    font-size: 7px;
+  }
 }

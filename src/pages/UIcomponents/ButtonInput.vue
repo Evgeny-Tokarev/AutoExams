@@ -14,6 +14,7 @@
 
 <script setup>
 import { reactive, ref, nextTick } from "vue";
+
 defineProps({
   buttonText: String,
 });
@@ -40,7 +41,6 @@ function handler(event) {
   if (counter === 1) {
     timer = setTimeout(function () {
       counter = 0;
-      console.log("timeout callback" + timer);
       clickHandler(event);
     }, 500);
   } else {
@@ -71,7 +71,7 @@ function emitValue(e) {
   border: 1px solid green;
   border-radius: 5px;
   min-width: 50px;
-  height: 2.5rem;
+  height: 2.7rem;
   text-align: center;
   cursor: pointer;
   &:hover {

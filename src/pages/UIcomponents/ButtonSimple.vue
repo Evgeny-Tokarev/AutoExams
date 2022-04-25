@@ -22,7 +22,7 @@ function clickHandler(event) {
   border: 1px solid green;
   border-radius: 5px;
   min-width: 10px;
-  height: 2.5rem;
+  height: 2.7rem;
   text-align: center;
   cursor: pointer;
   &_type_add {

@@ -28,6 +28,17 @@ import { reactive, computed } from "vue";
   h1 {
     font-size: 3.5rem;
     margin-bottom: 0;
+    text-align: center;
+  }
+}
+@media screen and (max-width: 768px) {
+  .main-content {
+    width: 90%;
+  }
+}
+@media screen and (max-width: 600px) {
+  .main-content {
+    width: 100%;
   }
 }
 </style>

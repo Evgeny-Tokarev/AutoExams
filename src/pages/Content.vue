@@ -9,7 +9,7 @@
     <div class="content__results">
       <table class="content__table" v-if="state.isCalculated">
         <th></th>
-        <th>Имя</th>
+        <th>Предмет</th>
         <th>Средний бал</th>
         <th>Автомат</th>
         <tr v-for="(result, index) in state.results" :key="index">
@@ -131,11 +131,13 @@ function calculateResult() {
     justify-content: center;
   }
   &__utility-text {
+    font-size: 1.8rem;
     width: 100%;
     position: absolute;
     text-align: center;
     top: -5rem;
     left: 50%;
+    margin: 0;
     transform: translateX(-50%);
   }
   &__results {
