@@ -56,6 +56,9 @@ function blurHandler() {
 }
 
 function emitValue(e) {
+  if (e.key === "Enter") {
+    blurHandler();
+  }
   let value = e.target.value;
   emit("inputChange", value);
 }
@@ -67,7 +70,7 @@ function emitValue(e) {
   font-size: 2rem;
   border: 1px solid green;
   border-radius: 5px;
-  min-width: 100px;
+  min-width: 50px;
   height: 2.5rem;
   text-align: center;
   cursor: pointer;

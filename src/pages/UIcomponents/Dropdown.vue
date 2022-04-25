@@ -7,7 +7,7 @@
         :buttonText="state.isDropped ? 'Close' : 'Open'"
       />
     </div>
-    <Transition name="slide-fade">
+    <Transition name="bounce">
       <ul class="dropdown__subject-list" v-if="state.isDropped">
         <li v-if="!!title" class="dropdown__title">{{ title }}</li>
         <li
@@ -104,21 +104,26 @@ function addItem(title) {
 }
 </script>
 <style lang="scss" scoped>
-.slide-fade-enter-active {
-  transition: all 0.3s ease-out;
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
 }
-
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
 }
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateY(-20px);
-  opacity: 0;
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 .dropdown {
   &__header {
+    width: 100%;
     border: 1px solid green;
     border-radius: 5px;
     background-color: rgb(239, 239, 239);
@@ -143,6 +148,8 @@ function addItem(title) {
     display: flex;
     flex-direction: column;
     align-content: flex-start;
+    position: relative;
+    z-index: 1;
   }
   &__title {
     list-style: none;
@@ -161,6 +168,7 @@ function addItem(title) {
   &__item_doubled {
     display: flex;
     justify-content: space-between;
+    gap: 1rem;
   }
 }
 </style>

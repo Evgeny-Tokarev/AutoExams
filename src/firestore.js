@@ -16,22 +16,25 @@ const app = initializeApp(firebaseConfig);
 const dbRef = ref(getDatabase(app));
 
 function writeUserData(props) {
-  console.log("props " + props);
   const db = getDatabase(app);
-  set(ref(db, "/"), {
+  return set(ref(db, "/"), {
     students: props,
-  });
+  })
+    .then(() => {
+      return "Сохранено";
+    })
+    .catch((error) => {
+      console.log(error);
+      return "Не сохранено";
+    });
 }
 
 function getUserData() {
-  console.log("Geting...");
   return get(child(dbRef, `/`))
     .then((snapshot) => {
       if (snapshot.exists()) {
-        console.log("Snapshot " + snapshot.val().students);
         return snapshot.val().students;
       } else {
-        console.log("No data available");
         return null;
       }
     })

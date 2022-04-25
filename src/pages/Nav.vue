@@ -1,10 +1,10 @@
 <template>
   <nav class="navigation">
-    <h2>{{ state.studentsName }}</h2>
+    <h2>{{ state.studentsName || "Ученик" }}</h2>
     <ul class="navigation__bar">
       <li class="navigation__bar-item">
         <Dropdown
-          name="Students"
+          name="Ученики"
           :subjectList="state.students"
           @buttonCallback="studentListHandler"
           @valueUpdate="changeStudent"
@@ -15,14 +15,14 @@
         />
       </li>
       <Transition name="bounce">
-        <li class="navigation__bar-item" v-show="state.students.length">
+        <li class="navigation__bar-item">
           <Dropdown
-            name="Subjects"
+            name="Предметы"
             :title="state.subjects ? null : 'Add subject'"
             :subjectList="state.subjects"
             @buttonCallback="subjectListHandler"
             @valueUpdate="changeSubject"
-            :addable="state.students.length ? true : false"
+            :addable="true"
             :removable="true"
             @addItem="addSubject"
             @removeItem="removeSubject"
@@ -30,9 +30,9 @@
         </li>
       </Transition>
       <Transition name="bounce">
-        <li class="navigation__bar-item" v-if="!!state.estimatesSubject">
+        <li class="navigation__bar-item">
           <Dropdown
-            name="Estimates"
+            name="Оценки"
             :subjectList="state.estimates"
             :title="state.estimatesSubject"
             @valueUpdate="changeEstimate"
@@ -45,11 +45,11 @@
       </Transition>
       <li class="navigation__bar-item">
         <Dropdown
-          name="Absence"
+          name="Пропуски"
           :subjectList="state.leaves"
-          title="Leaves"
+          title="Все пропуски"
           classes="_doubled"
-          :subjectNames="['Reasonable', 'Without reason']"
+          :subjectNames="['Неуважительные', 'Уважительные']"
           @valueUpdate="changeLeave"
         />
       </li>
@@ -64,7 +64,6 @@ import { computed, reactive } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
-
 const state = reactive({
   studentsName: computed(() => {
     return store.getters.getStudent(state.studentID)
@@ -78,46 +77,30 @@ const state = reactive({
     if (!store.getters.getStudentID()) {
       store.dispatch("setDefaults");
     }
-    console.log(store.getters.getStudentID());
     return store.getters.getStudentID();
   }),
   estimatesSubject: computed(() => {
-    console.log(
-      "estimatesSubject " + store.getters.getEstimatesSubject(state.studentID)
-    );
     return store.getters.getEstimatesSubject(state.studentID);
   }),
   estimatesSubjectIdx: computed(() => {
-    console.log(store.getters.getEstimatesSubjectIdx(state.studentID));
     return store.getters.getEstimatesSubjectIdx(state.studentID);
   }),
   leaves: computed(() => {
-    console.log(store.getters.getLeaves(state.studentID));
     return store.getters.getLeaves(state.studentID);
   }),
   subjects: computed(() => {
-    console.log(store.getters.getSubjectsNames(state.studentID));
     return store.getters.getSubjectsNames(state.studentID);
   }),
   estimates: computed(() => {
-    console.log(
-      store.getters.getSubjectEstimates(
-        state.studentID,
-        store.getters.getSubjectsName(
-          state.studentID,
-          state.estimatesSubjectIdx
-        ),
-        1
-      )
-    );
     return store.getters.getSubjectEstimates(
       state.studentID,
       store.getters.getSubjectsName(state.studentID, state.estimatesSubjectIdx)
     );
   }),
+  double: "_doubled",
 });
 
-state.double = "_doubled";
+store.dispatch("setDefaults");
 
 function changeStudent(newValue, idx) {
   if (!newValue) {
@@ -134,13 +117,16 @@ function changeEstimate(newValue, idx) {
   if (!newValue) {
     newValue = "0";
   }
-  store.commit({
-    type: "setEstimate",
-    id: state.studentID,
-    subject: state.estimatesSubject,
-    index: idx,
-    value: newValue,
-  });
+  let number = Number(newValue) || 0;
+  if (number > 0 && number < 6) {
+    store.commit({
+      type: "setEstimate",
+      id: state.studentID,
+      subject: state.estimatesSubject,
+      index: idx,
+      value: number,
+    });
+  }
 }
 
 function changeEstimatesSubject(subject) {
@@ -173,7 +159,6 @@ function changeCurrentStudent(newValue) {
 }
 
 function removeStudent(title, idx) {
-  console.log("remove " + idx);
   store.commit({
     type: "deleteStudent",
     index: idx,
@@ -181,7 +166,6 @@ function removeStudent(title, idx) {
 }
 
 function removeSubject(title, idx) {
-  console.log("remove " + idx);
   store.commit({
     type: "deleteSubject",
     id: state.studentID,
@@ -190,7 +174,6 @@ function removeSubject(title, idx) {
 }
 
 function removeEstimate(title, idx) {
-  console.log("remove " + idx + title);
   store.commit({
     type: "deleteEstimate",
     id: state.studentID,
@@ -203,13 +186,16 @@ function changeLeave(newValue, idx) {
   if (!newValue) {
     newValue = "0";
   }
-  const leave = idx == 0 ? "bad" : "good";
-  store.commit({
-    type: "setLeave",
-    id: state.studentID,
-    leaveType: leave,
-    value: newValue,
-  });
+  let number = Number(newValue) || 0;
+  if (number > 0 && number < 101) {
+    const leave = idx == 0 ? "bad" : "good";
+    store.commit({
+      type: "setLeave",
+      id: state.studentID,
+      leaveType: leave,
+      value: number,
+    });
+  }
 }
 function addSubject() {
   store.commit({
@@ -232,7 +218,6 @@ function addEstimate(title) {
   });
 }
 function studentListHandler(event) {
-  console.log(event.target.textContent);
   changeCurrentStudent(event.target.textContent);
 }
 function subjectListHandler(event) {
@@ -245,38 +230,25 @@ function subjectListHandler(event) {
 </script>
 
 <style lang="scss" scoped>
-.bounce-enter-active {
-  animation: bounce-in 0.5s;
-}
-.bounce-leave-active {
-  animation: bounce-in 0.5s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.25);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
 .navigation {
   padding: 1rem;
   font-size: 2rem;
   text-align: center;
   width: 100%;
   margin: 0 auto;
+  height: 50vh;
+  h2 {
+    font-size: 3rem;
+  }
   &__bar {
     display: flex;
     list-style: none;
     padding: 0;
-    gap: 1rem;
+    gap: 0.6%;
     justify-content: space-between;
     flex-wrap: wrap;
     &-item {
-      flex: 0 1 18rem;
+      flex: 0 0 24%;
     }
   }
 }
