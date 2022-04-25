@@ -5,7 +5,9 @@ Vue 3 проект, который позволяет создавать, сох
 Данные сохраняются в бесплатное облачное хранилище(Firebase/Realtime Database). Ключ доступа отрытый("захардкожен").
 Метод рассчёта автомата произвольный (средний бал - уважительные пропуски/10 - неуважительные пропуски/2 > 3.5).
 
-##Installation:
+ [Демо-версия](https://62671f0493ba10056a8fbd61--students-statistic.netlify.app/).
+
+## Installation:
 ```
 git clone https://github.com/Evgeny-Tokarev/AutoExams
 ```
