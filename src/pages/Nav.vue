@@ -45,11 +45,11 @@
       </Transition>
       <li class="navigation__bar-item">
         <Dropdown
-          name="Absenteeism"
+          name="Absence"
           :subjectList="state.leaves"
           title="Leaves"
           classes="_doubled"
-          :subjectNames="['bad', 'good']"
+          :subjectNames="['Reasonable', 'Without reason']"
           @valueUpdate="changeLeave"
         />
       </li>
@@ -62,9 +62,9 @@ import ButtonSimple from "./UIcomponents/ButtonSimple.vue";
 import Dropdown from "./UIcomponents/Dropdown.vue";
 import { computed, reactive } from "vue";
 import { useStore } from "vuex";
-import { writeUserData } from "../firestore.js";
 
 const store = useStore();
+
 const state = reactive({
   studentsName: computed(() => {
     return store.getters.getStudent(state.studentID)
@@ -112,15 +112,13 @@ const state = reactive({
     );
     return store.getters.getSubjectEstimates(
       state.studentID,
-      store.getters.getSubjectsName(state.studentID, state.estimatesSubjectIdx),
-      1
+      store.getters.getSubjectsName(state.studentID, state.estimatesSubjectIdx)
     );
   }),
 });
 
 state.double = "_doubled";
-// writeUserData(state.student);
-// // getUserData();
+
 function changeStudent(newValue, idx) {
   if (!newValue) {
     newValue = " ";
@@ -278,8 +276,7 @@ function subjectListHandler(event) {
     justify-content: space-between;
     flex-wrap: wrap;
     &-item {
-      flex: 0 1 300px;
-      cursor: pointer;
+      flex: 0 1 18rem;
     }
   }
 }

@@ -1,13 +1,5 @@
 import { initializeApp } from "firebase/app";
-import {
-  getDatabase,
-  ref,
-  set,
-  get,
-  child,
-  //   push,
-  //   update,
-} from "firebase/database";
+import { getDatabase, ref, set, get, child } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAD_BTx-_LCqLtFBXbTmUaWieE030kNW8U",
@@ -24,24 +16,23 @@ const app = initializeApp(firebaseConfig);
 const dbRef = ref(getDatabase(app));
 
 function writeUserData(props) {
-  console.log(props);
+  console.log("props " + props);
   const db = getDatabase(app);
-  set(ref(db, "student/" + props.id), {
-    id: props.id,
-    name: props.name,
-    subjects: props.subjects,
-    bad_leaves: props.bad_leaves,
-    good_leaves: props.good_leaves,
+  set(ref(db, "/"), {
+    students: props,
   });
 }
 
-function getUserData(id) {
-  get(child(dbRef, `users/${id}`))
+function getUserData() {
+  console.log("Geting...");
+  return get(child(dbRef, `/`))
     .then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(snapshot.val());
+        console.log("Snapshot " + snapshot.val().students);
+        return snapshot.val().students;
       } else {
         console.log("No data available");
+        return null;
       }
     })
     .catch((error) => {
