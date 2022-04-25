@@ -3,19 +3,15 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-// const webpack = require('webpack');
-// const CopyPlugin = require('copy-webpack-plugin');
-// const TerserPlugin = require('terser-webpack-plugin');
-// const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
 const webpack = require("webpack");
-const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
 const isDev = process.env.NODE_ENV === "development";
 
 module.exports = {
   target: "web",
-  mode: "development",
+  mode: isDev ? "development" : "production",
   entry: {
     main: "./src/main.js",
     firestore: "./src/firestore.js",
@@ -98,7 +94,7 @@ module.exports = {
     new ESLintPlugin({
       extensions: ["js"],
     }),
-    // new FaviconsWebpackPlugin('./img/favicon.jpg'),
+    new FaviconsWebpackPlugin("./src/assets/student.png"),
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
     }),
