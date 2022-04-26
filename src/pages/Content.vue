@@ -175,6 +175,12 @@ async function calculateResult() {
       background-color: rgb(239, 239, 239);
       border-collapse: collapse;
     }
+    th {
+      font-size: 2rem;
+    }
+    tr {
+      font-size: 1.8rem;
+    }
   }
 }
 </style>
