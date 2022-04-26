@@ -13,6 +13,11 @@
         <li class="footer__com-item">
           <a href="https://github.com/Evgeny-Tokarev">Github</a>
         </li>
+        <li class="footer__com-item">
+          <a href="https://github.com/Evgeny-Tokarev/AutoExams"
+            >Репозиторий программы</a
+          >
+        </li>
       </ul>
     </div>
   </footer>
@@ -35,8 +40,6 @@
   }
   &__text {
     font-size: 1.8rem;
-  }
-  &__communications {
   }
   &__com-item {
     list-style: none;

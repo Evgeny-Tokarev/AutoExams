@@ -119,7 +119,6 @@ function updateHandler(...props) {
   emit("valueUpdate", value, idx);
 }
 function addItem(title) {
-  console.log("addItem  " + title);
   emit("addItem", title);
 }
 </script>

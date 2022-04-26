@@ -144,12 +144,17 @@ const store = createStore({
     },
     setNewEstimate: (state, payload) => {
       if (state.students.find((student) => student.id === payload.id)) {
-        state.students
-          .find((student) => student.id === payload.id)
-          .subjects.find(
-            (currentSubject) => currentSubject.name === payload.name
-          )
-          .estimates.push("0");
+        if (
+          state.students.find((student) => student.id === payload.id).subjects
+            .length
+        ) {
+          state.students
+            .find((student) => student.id === payload.id)
+            .subjects.find(
+              (currentSubject) => currentSubject.name === payload.name
+            )
+            .estimates.push("0");
+        }
       }
     },
     setSubject: (state, payload) => {
@@ -216,7 +221,7 @@ const store = createStore({
       if (estimatesSubjectIdx === payload.index) {
         const nextIdx =
           student.subjects.length - 1 === payload.index ? 0 : payload.index + 1;
-        console.log("next " + nextIdx);
+
         student.subjects.forEach((currentSubject, index) => {
           currentSubject.isEstimatesSubject = index === nextIdx ? true : false;
         });

@@ -1,13 +1,13 @@
 <template>
   <div class="content">
     <div class="content__controlButtons">
-      <ButtonSimple buttonText="Calculate" @buttonCallback="calculateResult" />
-      <ButtonSimple buttonText="Save data" @buttonCallback="saveResult" />
-      <ButtonSimple buttonText="Load data" @buttonCallback="loadResult" />
+      <ButtonSimple buttonText="Рассчитать" @buttonCallback="calculateResult" />
+      <ButtonSimple buttonText="Сохранить" @buttonCallback="saveResult" />
+      <ButtonSimple buttonText="Загрузить" @buttonCallback="loadResult" />
     </div>
     <p class="content__utility-text">{{ state.message }}</p>
     <div class="content__results">
-      <table class="content__table" v-if="state.isCalculated">
+      <table class="content__table" v-if="state.isCalculated && state.results">
         <th></th>
         <th>Предмет</th>
         <th>Средний бал</th>
@@ -55,6 +55,7 @@ const state = reactive({
   result: false,
 });
 loadResult();
+
 watch(
   () => state.data,
   () => {
@@ -100,20 +101,36 @@ function loadResult() {
   getData();
 }
 
-function calculateResult() {
-  state.results = state.student.subjects.map((subject) => {
-    return {
-      value: (
-        subject.estimates.reduce((prev, cur) => Number(prev) + Number(cur)) /
-        subject.estimates.length
-      ).toFixed(2),
-      name: subject.name,
-    };
-  });
-
-  state.absenceCoefficient =
-    state.student.bad_leaves / 2 + state.student.good_leaves / 10;
-  state.isCalculated = true;
+async function calculateResult() {
+  if (state.student ? state.student.subjects : null) {
+    if (state.student.subjects.length) {
+      state.results = state.student.subjects.map((subject) => {
+        if (subject.estimates.length) {
+          return {
+            value: (
+              subject.estimates.reduce(
+                (prev, cur) => Number(prev) + Number(cur)
+              ) / subject.estimates.length
+            ).toFixed(2),
+            name: subject.name,
+          };
+        } else return { value: 0, name: subject.name };
+      });
+    } else {
+      state.message = "Неизвестен предмет";
+      await timer(3000);
+      state.message = "";
+      state.results = null;
+    }
+    state.absenceCoefficient =
+      state.student.bad_leaves / 2 + state.student.good_leaves / 10;
+    state.isCalculated = true;
+  } else {
+    state.message = "Неизвестен ученик";
+    await timer(3000);
+    state.message = "";
+    state.results = null;
+  }
 }
 </script>
 

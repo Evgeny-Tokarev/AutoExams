@@ -80,6 +80,7 @@ const state = reactive({
     return store.getters.getStudentID();
   }),
   estimatesSubject: computed(() => {
+    console.log(store.getters.getEstimatesSubject(state.studentID));
     return store.getters.getEstimatesSubject(state.studentID);
   }),
   estimatesSubjectIdx: computed(() => {
