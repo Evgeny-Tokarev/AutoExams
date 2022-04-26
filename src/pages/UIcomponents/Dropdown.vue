@@ -142,6 +142,8 @@ function addItem(title) {
 }
 .dropdown {
   &__header {
+    position: relative;
+    z-index: 1;
     width: 100%;
     border: 1px solid green;
     border-radius: 5px;

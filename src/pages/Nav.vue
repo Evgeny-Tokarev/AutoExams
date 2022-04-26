@@ -245,7 +245,7 @@ function subjectListHandler(event) {
     display: flex;
     list-style: none;
     padding: 0;
-    gap: 10px;
+    gap: 0.5rem;
     justify-content: space-between;
     flex-wrap: wrap;
     &-item {
@@ -255,7 +255,7 @@ function subjectListHandler(event) {
 }
 @media screen and (max-width: 992px) {
   .navigation__bar-item {
-    flex: 0 0 48%;
+    flex: 0 0 45%;
   }
 }
 </style>

@@ -70,7 +70,7 @@ function emitValue(e) {
   font-size: 2rem;
   border: 1px solid green;
   border-radius: 5px;
-  min-width: 50px;
+  min-width: 20px;
   height: 2.7rem;
   text-align: center;
   cursor: pointer;
