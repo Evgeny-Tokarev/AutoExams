@@ -5,16 +5,16 @@
       <p>Со мной можно связаться:</p>
       <ul class="footer__communications">
         <li class="footer__com-item">
-          <a href="https://t.me/ghenyaT">Telegram: @ghenyaT</a>
+          <a href="https://t.me/ghenyaT" target="_blank">Telegram: @ghenyaT</a>
         </li>
         <li class="footer__com-item">
-          <a href="mailto: ghenya.t@gmail.com">Email: ghenya.t@gmail.com</a>
+          <a href="mailto: ghenya.t@gmail.com" target="_blank">Email: ghenya.t@gmail.com</a>
         </li>
         <li class="footer__com-item">
-          <a href="https://github.com/Evgeny-Tokarev">Github</a>
+          <a href="https://github.com/Evgeny-Tokarev" target="_blank">Github</a>
         </li>
         <li class="footer__com-item">
-          <a href="https://github.com/Evgeny-Tokarev/AutoExams"
+          <a href="https://github.com/Evgeny-Tokarev/AutoExams" target="_blank"
             >Репозиторий программы</a
           >
         </li>
