@@ -20,5 +20,6 @@ npm run dev
  
 or 
 ```
-npm run buld for production build
+npm run buld 
 ```
+for production build
