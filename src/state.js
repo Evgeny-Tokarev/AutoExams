@@ -30,28 +30,13 @@ const store = createStore({
     },
     getEstimatesSubject: (state) => (id) => {
       const student = state.students.find((student) => student.id === id);
-      if (student) {
-        if (
-          student.subjects
-            ? student.subjects.find(
-                (currentSubject) => currentSubject.isEstimatesSubject === true
-              )
-            : false
-        ) {
+      if (student && student.subjects) {
+        if (student.subjects.length) {
           return student.subjects.find(
             (currentSubject) => currentSubject.isEstimatesSubject === true
           ).name;
-        } else {
-          if (student.subjects ? student.subjects.length : false) {
-            student.subjects[0].isEstimatesSubject = true;
-            return student.subjects[0];
-          } else {
-            return null;
-          }
-        }
-      } else {
-        return null;
-      }
+        } else return null;
+      } else return null;
     },
 
     getEstimatesSubjectIdx: (state) => (id) => {
@@ -114,7 +99,9 @@ const store = createStore({
         subjects: [],
         bad_leaves: "0",
         good_leaves: "0",
-        current: true,
+      });
+      state.students.forEach((student) => {
+        student.current = student.id === nextID ? true : false;
       });
     },
     setCurrentStudent: (state, payload) => {
@@ -178,22 +165,23 @@ const store = createStore({
         (student) => student.id === payload.id
       );
       let counter = 0;
-      if (student ? student.subjects : false) {
+      if (student && student.subjects) {
         student.subjects.forEach((subject) => {
           if (subject.name.slice(0, 7) === `Subject`) {
             counter++;
           }
         });
-      } else {
-        if (student) {
-          student.subjects = [];
+        if (counter === 0) {
+          counter = "";
         }
-      }
-      if (counter === 0) {
-        counter = "";
-      }
-      if (student) {
-        student.subjects.push({ name: `Subject${counter + 1}`, estimates: [] });
+        student.subjects.push({
+          name: `Subject${counter + 1}`,
+          estimates: [],
+        });
+        student.subjects.forEach((currentSubject) => {
+          currentSubject.isEstimatesSubject =
+            currentSubject.name === `Subject${counter + 1}` ? true : false;
+        });
       }
     },
     deleteStudent: (state, payload) => {
@@ -221,7 +209,6 @@ const store = createStore({
       if (estimatesSubjectIdx === payload.index) {
         const nextIdx =
           student.subjects.length - 1 === payload.index ? 0 : payload.index + 1;
-
         student.subjects.forEach((currentSubject, index) => {
           currentSubject.isEstimatesSubject = index === nextIdx ? true : false;
         });
