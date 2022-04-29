@@ -74,13 +74,9 @@ const state = reactive({
     return store.getters.getStudents();
   }),
   studentID: computed(() => {
-    if (!store.getters.getStudentID()) {
-      store.dispatch("setDefaults");
-    }
     return store.getters.getStudentID();
   }),
   estimatesSubject: computed(() => {
-    // console.log(store.getters.getEstimatesSubject(state.studentID));
     return store.getters.getEstimatesSubject(state.studentID);
   }),
   estimatesSubjectIdx: computed(() => {
@@ -95,7 +91,7 @@ const state = reactive({
   estimates: computed(() => {
     return store.getters.getSubjectEstimates(
       state.studentID,
-      store.getters.getSubjectsName(state.studentID, state.estimatesSubjectIdx)
+      state.estimatesSubject
     );
   }),
   double: "_doubled",
