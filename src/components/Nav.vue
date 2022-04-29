@@ -58,8 +58,8 @@
 </template>
 
 <script setup>
-import ButtonSimple from "./UIcomponents/ButtonSimple.vue";
-import Dropdown from "./UIcomponents/Dropdown.vue";
+import ButtonSimple from "../UIvidgets/ButtonSimple.vue";
+import Dropdown from "../UIvidgets/Dropdown.vue";
 import { computed, reactive } from "vue";
 import { useStore } from "vuex";
 

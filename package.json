@@ -1,15 +1,15 @@
 {
-  "name": "webpack5-vue3",
+  "name": "autoexams",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack serve --open --config webpack.config.js",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
     "lint": "eslint --fix --ext .js,.jsx ."
   },
-  "author": "cristian",
+  "author": "Eugen Tokarev",
   "license": "ISC",
   "eslintConfig": {
     "root": true,

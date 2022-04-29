@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import ButtonSimple from "./UIcomponents/ButtonSimple.vue";
+import ButtonSimple from "../UIvidgets/ButtonSimple.vue";
 import { writeUserData, getUserData } from "../firestore.js";
 import { computed, reactive, watch } from "vue";
 import { useStore } from "vuex";
